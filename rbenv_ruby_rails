@@ -1,0 +1,56 @@
+
+#Updates the rbenv_ruby_rails image installed packages, so updates rbenv_ruby_rails image
+update_rbenv_ruby_rails () {
+	printf "\n\n\tUPDATING rbenv_ruby_rails image\n\n"
+	apt-get install -y --only-upgrade ruby-dev build-essential libssl-dev zlib1g-dev libcurl4-openssl-dev rbenv ruby-build rails && gem update bundler && rbenv rehash
+	showVersions
+
+}
+
+onBuild () {
+	case $1 in
+		--help|-h) 
+			printf "\n\n\t --> Possible Options <--\n\n"
+			printf "'--update|-u' \t Will update this image if the build argument NEED_UPDATE_ON_BUILD is true\n\n"
+			printf "'--show-versions' \t Show the versions of installed packages(ruby, ruby-build, rbenv, rails, bundler)\n\n\n";;
+		--update|-u) onBuildUpdate;;
+		--show-versions) showVersions;;
+		*) printf "\n\n-- The parameterer '$2' is not a valid one --\n\n";;
+	esac
+}
+
+#This function updates rbenv_ruby_rails packages if  the variable NEED_UPDATE_ON_BUILD is true
+onBuildUpdate () {
+	if $NEED_UPDATE_ON_BUILD == true ; then
+    	update_rbenv_ruby_rails
+    else
+    	showVersions
+	fi
+}
+
+# show the version of installed packages
+showVersions () {
+	printf "\n\n\tInstalled packages versions:\n\n"
+	ruby --version
+	ruby-build --version
+	rbenv --version
+	rails --version
+	bundler --version
+	printf "\n\n"
+
+}
+
+############################# MAIN
+
+case $1 in
+	--help)
+		printf "\n\n\t --> Possible Options <--\n\n"
+		printf "'--update|-u' \t Will update this image if necessary. Use this option to update the content of this image on a running container for example\n\n"
+		printf "'--on-build' \t IMPORTANT: This option was created to contain actions/options that should be executed on ONBUILD of DOCKERFILES."
+		printf "Type '--help' for more informations\n\n"
+		printf "'--show-versions' \t Show the versions of installed packages(ruby, ruby-build, rbenv, rails, bundler)\n\n\n";;
+
+	--update|-u) update_rbenv_ruby_rails;;
+	--on-build) onBuild $2;;
+	--show-versions) showVersions;;
+esac
