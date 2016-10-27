@@ -1,6 +1,6 @@
 ## Supported tags and respective ``Dockerfile`` links
 
-- ``latest`` : [Dockerfile](https://github.com/josechagas)
+- ``latest`` : [Dockerfile](https://github.com/josechagas/rbenv-ruby-rails/blob/master/Dockerfile)
 
 
 This is a working image , originally designed to be used as a base for another that will execute some RUBY on RAILS projects, but it's completely working if you want to use it to make a container for you project.
